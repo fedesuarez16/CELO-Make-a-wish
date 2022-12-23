@@ -1,89 +1,81 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
 
-interface IERC20Token {
-  function transfer(address, uint256) external returns (bool);
-  function approve(address, uint256) external returns (bool);
-  function transferFrom(address, address, uint256) external returns (bool);
-  function totalSupply() external view returns (uint256);
-  function balanceOf(address) external view returns (uint256);
-  function allowance(address, address) external view returns (uint256);
+contract CrowdFunding {
+    enum FundRaisingState {active, inactive}
 
-  event Transfer(address indexed from, address indexed to, uint256 value);
-  event Approval(address indexed owner, address indexed spender, uint256 value);
-}
 
-contract Marketplace {
-
-    uint internal productsLength = 0;
-    address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
-
-    struct Product {
-        address payable owner;
+    struct Project {
+        string id;
         string name;
-        string image;
         string description;
-        string location;
-        uint price;
-        uint sold;
+        address payable author;
+        FundRaisingState state;
+        uint256 funds;
+        uint256 fundraisingGoal;
     }
 
-    mapping (uint => Product) internal products;
+    Project public project;
 
-    function writeProduct(
+    event ProjectFunded(string projectId, uint256 value);
+
+    event ProjectStateChanged(string id, uint256 FundRaisingState);
+
+     constructor(
+        string memory _id,
         string memory _name,
-        string memory _image,
-        string memory _description, 
-        string memory _location, 
-        uint _price
-    ) public {
-        uint _sold = 0;
-        products[productsLength] = Product(
-            payable(msg.sender),
+        string memory _description,
+        uint256 _fundraisingGoal
+    ) {
+          project = Project(
+            _id,
             _name,
-            _image,
             _description,
-            _location,
-            _price,
-            _sold
+            payable(msg.sender),
+            FundRaisingState.active,
+            0,
+            _fundraisingGoal
         );
-        productsLength++;
+      
     }
 
-    function readProduct(uint _index) public view returns (
-        address payable,
-        string memory, 
-        string memory, 
-        string memory, 
-        string memory, 
-        uint, 
-        uint
-    ) {
-        return (
-            products[_index].owner,
-            products[_index].name, 
-            products[_index].image, 
-            products[_index].description, 
-            products[_index].location, 
-            products[_index].price,
-            products[_index].sold
-        );
-    }
-    
-    function buyProduct(uint _index) public payable  {
+    modifier isAuthor() {
         require(
-          IERC20Token(cUsdTokenAddress).transferFrom(
-            msg.sender,
-            products[_index].owner,
-            products[_index].price
-          ),
-          "Transfer failed."
+            project.author == msg.sender,
+            "You need to be the project author"
         );
-        products[_index].sold++;
+        _;
     }
-    
-    function getProductsLength() public view returns (uint) {
-        return (productsLength);
+
+    modifier isNotAuthor() {
+        require(
+            project.author != msg.sender,
+            "As author you can not fund your own project"
+        );
+        _;
+    }
+
+    function fundProject(uint) public payable {
+        require(project.state != FundRaisingState.inactive, "The project can not receive funds");
+        //require(msg.value > 0, "Fund value must be greater than 0");
+        project.author.transfer(msg.value);
+        project.funds += msg.value;
+        emit ProjectFunded(project.id, msg.value);
+    }
+
+    function changeProjectState(FundRaisingState newState) public isAuthor {
+        require(project.state != newState, "New state must be different");
+        project.state = newState;
+        //emit ProjectStateChanged(project.id, newState);
+    }
+
+      function getFundRaisingGoal () public view returns (uint) {
+        return project.fundraisingGoal;
     }
 }
+
+
+// lunes: pudes avanzar en la funcion changeproject state creoq ya esta casi terminada ,le agregue el enum que necesitaba para funcionar 
+//solo me queda ver como hacer para que el valor 1 y 0 figuren como project active o inactivef
+//ya testie todas las funciones y andan bien, las agregue al abi del frontend    
