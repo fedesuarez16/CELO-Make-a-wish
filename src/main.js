@@ -1,53 +1,72 @@
-import Web3 from "web3"
-import { newKitFromWeb3 } from "@celo/contractkit"
-import BigNumber from "bignumber.js"
-import marketplaceAbi from "../contract/marketplace.abi.json"
-import erc20Abi from "../contract/erc20.abi.json"
-import { CeloContract } from "@celo/contractkit";
+  import Web3 from "web3"
+  import { newKitFromWeb3 } from "@celo/contractkit"
+  import BigNumber from "bignumber.js"
+  import marketplaceAbi from "../contract/marketplace.abi.json"
+  import erc20Abi from "../contract/erc20.abi.json"
+  import { CeloContract } from "@celo/contractkit";
 
 
-const ERC20_DECIMALS = 18
-const MPContractAddress = "0xF96CA1aFdC528d4E8ee257F1cFf078504cb3A3e4"
-const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
+  const ERC20_DECIMALS = 18
+  const MPContractAddress = "0x8aE12cd1E825ce5029883EFc76Ede4Ae348a05bf"
+  const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
-let kit
-let contract
-let approve
-
-
-// window.ethereum.request({method:'eth_requestAccounts'})
+  let kit
+  let contract
+  let approve
 
 
-const connectCeloWallet = async function () {
-  if (window.celo) {
-    notification("⚠️ Please approve this DApp to use it.")
-    try {
-      await window.celo.enable()
-      notificationOff()
+  //  window.ethereum.request({method:'eth_requestAccounts'})
 
-      const web3 = new Web3(window.celo)
-      kit = newKitFromWeb3(web3)
+  const connectCeloWallet = async function () {
+    if (window.celo) {
+      notification("⚠️ Please approve this DApp to use it.")
+      try {
+        await window.celo.enable()
+        notificationOff()
 
-      const accounts = await kit.web3.eth.getAccounts()
-      kit.defaultAccount = accounts[0]
+        const web3 = new Web3(window.celo)
+        kit = newKitFromWeb3(web3)
 
-      contract = new kit.web3.eth.Contract(marketplaceAbi, MPContractAddress)
-    } catch (error) {
-      notification(`⚠️ ${error}.`)
+        const accounts = await kit.web3.eth.getAccounts()
+        kit.defaultAccount = accounts[0]
+
+        contract = new kit.web3.eth.Contract(marketplaceAbi, MPContractAddress)
+      } catch (error) {
+        notification(`⚠️ ${error}.`)
+      }
+    } else {
+      notification("⚠️ Please install the CeloExtensionWallet.")
     }
-  } else {
-    notification("⚠️ Please install the CeloExtensionWallet.")
   }
+
+
+
+function notification(_text) {
+  document.querySelector(".alert").style.display = "block"
+  document.querySelector("#notification").textContent = _text
 }
 
-async function approve(_price) {
-  const cUSDContract = new kit.web3.eth.Contract(erc20Abi, cUSDContractAddress)
-
-  const result = await cUSDContract.methods
-    .approve(MPContractAddress, _price)
-    .send({ from: kit.defaultAccount })
-  return result
+function notificationOff() {
+  document.querySelector(".alert").style.display = "none"
 }
+
+window.addEventListener("load", async () => {
+  notification("⌛ Loading...")
+  await connectCeloWallet()
+  await getBalance()
+  await getFundRaisingGoal()
+  await getFundsState()
+  notificationOff()
+});
+
+// async function approve(_price) {
+//   const cUSDContract = new kit.web3.eth.Contract(erc20Abi, cUSDContractAddress)
+
+//   const result = await cUSDContract.methods
+//     .approve(MPContractAddress, _price)
+//     .send({ from: kit.defaultAccount })
+//   return result
+// }
 
 const getBalance = async function () {
   const totalBalance = await kit.getTotalBalance(kit.defaultAccount)
@@ -55,70 +74,102 @@ const getBalance = async function () {
   document.querySelector("#balance").textContent = cUSDBalance
 }
 
+
+document.querySelector("#fund-project-button").addEventListener('click', async () => {
+  // Convert the string value to a BigNumber object
+  let amount = new BigNumber(document.getElementById("fund-project-amount").value)
+  // Shift the value by the number of decimals
+  amount = amount.shiftedBy(ERC20_DECIMALS).toString() 
+
+  if (!kit.defaultAccount) {
+     notification("⌛ you must autenticate...");
+     return;
+     }
+ 
+     // Check that the params is greater than 0
+     if (amount <= 0) {
+
+        notification("⌛ The amount must be greater than 0...");
+        return;
+     }
+     
+  await contract.methods.fundProject(amount).send({ from: kit.defaultAccount, value: amount });
+
+     await getFundsState()
+        notification("you transfered succesfully")
+});
+
+
+async function getFundRaisingGoal() {
+  // Call the contract's getFundRaisingGoal function
+  const goal = await contract.methods.getFundRaisingGoal().call();
+  document.getElementById('fundraising-goal').textContent = goal;
+
+  return goal;
+}
+
+async function getFundsState() {
+
+ 
+  // Call the contract's getFundsState function
+  const funds = await contract.methods.getFundsState().call();
+  document.getElementById('funds-raised').textContent = funds;
+
+  return funds;
+}
+
+
+document.querySelector("#change-project-state-button").addEventListener('click', async () => {
+  // Get the value selected by the user from the dropdown menu
+  const newState = document.querySelector("#change-project-state-select").value;
+
+  // Check that the user is authenticated
+  if (!kit.defaultAccount) {
+    notification("you must be authenticated to change the fundraising state")
+  }
+
+  // Check that the new state is valid
+  if (newState !== '0' && newState !== '1') {
+    notification("invalid state")
+  }
+
+  // Call the contract's changeProjectState function
+  await contract.methods.changeProjectState(newState).send({ from: kit.defaultAccount });
+
+  notification("you changed the fundraising state")
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //   // Check that the user is authenticated
+//    if (!web3.eth.defaultAccount) {
+//   throw new Error('You must be authenticated to fund the project');
+//    }
+
+//    // Check that the params is greater than 0
+//    if (params <= 0) {
+//      throw new Error('The amount must be greater than 0');
+//    }
+
+//    // Call the contract's fundProject function
+//    await contract.methods.fundProject(params).send({ from: web3.eth.defaultAccount, value: params });
+
+
   
-//   // Create an instance of the contract
-//   const votingContract = new Web3.eth.Contract(marketplaceAbi, MPContractAddress)
-
-
-// // Postulate as a candidate
-// const formPostulate = document.getElementById('form-postulate');
-// formPostulate.addEventListener('submit', (event) => {
-//   event.preventDefault();
-
-//   // Get the candidate name from the form
-//   const candidateName = document.getElementById('candidate-name').value;
-
-//   // Postulate as a candidate
-//   votingContract.methods.postulate(candidateName).send({ from: '0x12345...' })
-//     .then(() => {
-//       console.log('Successfully postulated as a candidate');
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// });
-
-// // Cast a vote
-// const formVote = document.getElementById('form-vote');
-// formVote.addEventListener('submit', (event) => {
-//   event.preventDefault();
-
-//   // Get the candidate name from the form
-//   const candidateName = document.getElementById('candidate-name').value;
-
-//   // Cast a vote for the candidate
-//   votingContract.methods.vote(candidateName).send({ from: '0x12345...' })
-//     .then(() => {
-//       console.log('Successfully cast vote');
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// });
-
-// // Get the number of votes received by a candidate
-// const votesReceived = document.getElementById('votes-received');
-// votingContract.methods.getVotes('Alice').call()
-//   .then((votes) => {
-//     votesReceived.innerHTML = votes;
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//document.querySelector("#newDonationBtn")
+// //    .addEventListener("click", async (e) => {
 
 
 //  const getFundraisingGoal = async function () {
@@ -478,4 +529,102 @@ new BigNumber(document.getElementById("newDonation").value)
     }
   }
 }) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+//   // Create an instance of the contract
+//   // const contract = new Web3.eth.Contract(marketplaceAbi, MPContractAddress)
+
+
+// // Postulate as a candidate
+// const formPostulate = document.getElementById('form-postulate');
+// formPostulate.addEventListener('submit', (event) => {
+//   event.preventDefault();
+
+//   // Get the candidate name from the form
+//   const candidateName = document.getElementById('candidate-name').value;
+
+//   // Postulate as a candidate
+//   contract.methods.postulate(candidateName).send({ from: kit.defaultAccount })
+//     .then(() => {
+//       console.log('Successfully postulated as a candidate');
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+  
+  
+// });
+
+// // Cast a vote
+// const formVote = document.getElementById('form-vote');
+// formVote.addEventListener('submit', (event) => {
+//   event.preventDefault();
+  
+
+//   // Get the candidate name from the form
+//   const candidateName = document.getElementById('candidate-name').value;
+//   // Cast a vote for the candidate
+//   contract.methods.vote(candidateName).send({ from: kit.defaultAccount  })
+//     .then(() => {
+//       console.log('Successfully cast vote');
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+
+
+// // Get the number of votes received by a candidate
+// const votesReceived = document.getElementById('votes-received');
+// contract.methods.getVotes('').call()
+//   .then((votes) => {
+//     votesReceived.innerHTML = votes;
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//   });
+
+
+
+  
+// const getCandidates = async function (){
+
+//   const candidates =  contract.methods.getCandidate(  ).call()
+//   document.getElementById('candidates').textContent;
+
+// return candidates
+
+// }
+// getCandidates()
+
+// });
 

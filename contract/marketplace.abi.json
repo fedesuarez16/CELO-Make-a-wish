@@ -2,32 +2,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "enum CrowdFunding.FundRaisingState",
-				"name": "newState",
-				"type": "uint8"
-			}
-		],
-		"name": "changeProjectState",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "fundProject",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "string",
 				"name": "_id",
 				"type": "string"
@@ -90,8 +64,47 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "enum CrowdFunding.FundRaisingState",
+				"name": "newState",
+				"type": "uint8"
+			}
+		],
+		"name": "changeProjectState",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "fundProject",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getFundRaisingGoal",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getFundsState",
 		"outputs": [
 			{
 				"internalType": "uint256",

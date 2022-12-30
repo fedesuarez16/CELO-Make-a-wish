@@ -1,31 +1,92 @@
-<!-- HTML code for the interface -->
 <html>
   <head>
     <!-- Load the Web3 library -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 
+
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+    crossorigin="anonymous"
+  />
+
     <!-- Load the contract ABI -->
     <script src="./abi.json"></script>
+
+    <style>
+      :root {
+        --bs-font-sans-serif: "DM Sans", sans-serif;
+      }
+
+      @media (min-width: 576px) {
+        .card {
+          border: 0;
+          box-shadow: rgb(0 0 0 / 5%) 0px 10px 20px;
+          border-radius: 10px;
+        }
+
+        .card-img-top {
+          width: 100%;
+          height: 20vw;
+          object-fit: cover;
+        }
+      }
+    </style>
+
   </head>
   <body>
-    <!-- Form to postulate as a candidate -->
-    <form id="form-postulate">
-      <label for="candidate-name">Candidate name:</label><br>
-      <input type="text" id="candidate-name" name="candidate-name"><br>
-      <input type="submit" value="Postulate">
-    </form> 
+    <div class="container mt-2" style="max-width: 72em">
 
-    <!-- Form to cast a vote -->
-    <form id="form-vote">
-      <label for="candidate-name">Candidate name:</label><br>
-      <input type="text" id="candidate-name" name="candidate-name"><br>
-      <input type="submit" value="Vote">
-    </form> 
-
-    <!-- Display the number of votes received by a candidate -->
-    <div id="votes">
-      <p>Number of votes received: <span id="votes-received"></span></p>
+      <nav class="navbar bg-white navbar-light">
+        <div class="container-fluid">
+          <span class="nav-link border rounded-pill bg-light">
+            <span id="balance">0</span>
+            cUSD
+          </span>
+        </div>
+      </nav>
+      <div class="alert alert-warning sticky-top mt-2" role="alert">
+        <span id="notification">⌛ Loading...</span>
+      </div>
+      <main id="marketplace" class="row"></main>
     </div>
+
+
+
+
+   
+        <h1>Crowdfunding</h1>
+        <p>Fundraising goal: <span id="fundraising-goal"></span></p>
+        <p>Funds raised: <span id="funds-raised"></span></p>
+        <p>
+          <button id="fund-project-button">Fund Project</button>
+          <input id="fund-project-amount" type="number" >
+        </p>
+        <p>
+          <button id="change-project-state-button">Change Project State</button>
+          <select id="change-project-state-select">
+            <option value="0">Active</option>
+            <option value="1">Inactive</option>
+          </select>
+        </p>
+        <script src="index.js"></script>
+      </body>
+    </html>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- Script to interact with the contract -->
     <script
