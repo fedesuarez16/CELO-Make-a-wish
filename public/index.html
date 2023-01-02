@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load the Web3 library -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 
@@ -15,7 +15,7 @@
   />
 
     <!-- Load the contract ABI -->
-    <script src="./abi.json"></script>
+    <!-- <script src="./abi.json"></script> -->
 
     <style>
       :root {
@@ -42,6 +42,24 @@
 
 
 <header>
+
+
+  <div class="  position-fixed w-full" >
+
+    <nav class="navbar bg-white navbar-light">
+      <div class="container-fluid">
+        <span class="nav-link border rounded-pill bg-light">
+          <span id="balance">0</span>
+          cUSD
+        </span>
+      </div>
+    </nav>
+    <div class="alert alert-warning sticky-top mt-2" role="alert">
+      <span id="notification">⌛ Loading...</span>
+    </div>
+    <main id="marketplace" class="row"></main>
+  </div>
+
     <section
     class="overflow-hidden bg-gray-50 sm:grid sm:grid-cols-2 sm:items-center"
   >
@@ -52,10 +70,7 @@
         </h2>
   
         <p class="hidden text-gray-500 md:mt-4 md:block">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et, egestas
-          tempus tellus etiam sed. Quam a scelerisque amet ullamcorper eu enim et
-          fermentum, augue. Aliquet amet volutpat quisque ut interdum tincidunt
-          duis.
+         We are a crowdfunding campaign to raise money for organizations that provide shelter, food, education, and other essential services to children without a home. Every dollar that we raise will go directly to supporting these children and giving them the chance to thrive.
         </p>
   
         <div class="mt-4 md:mt-8">
@@ -63,7 +78,7 @@
             href="#"
             class="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
           >
-            Get Started Today
+            Donate Now
           </a>
         </div>
       </div>
@@ -78,62 +93,144 @@
   
 </header>
 
+<section class="bg-white">
+  <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+        Trusted by eCommerce Businesses
+      </h2>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="container mt-2" style="max-width: 72em">
-
-      <nav class="navbar bg-white navbar-light">
-        <div class="container-fluid">
-          <span class="nav-link border rounded-pill bg-light">
-            <span id="balance">0</span>
-            cUSD
-          </span>
-        </div>
-      </nav>
-      <div class="alert alert-warning sticky-top mt-2" role="alert">
-        <span id="notification">⌛ Loading...</span>
-      </div>
-      <main id="marketplace" class="row"></main>
+      <p class="mt-4 text-gray-500 sm:text-xl">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione dolores
+        laborum labore provident impedit esse recusandae facere libero harum
+        sequi.
+      </p>
     </div>
 
+    <div class="mt-8 sm:mt-12">
+      <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            Fundraising goal
+            </dt>
+
+          <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl" id="fundraising-goal"></span></p>
+
+
+        </div>
+
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4  py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            CELO
+          </dt>
+
+          <p >Funds raised: <br> <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl w-44  " id="funds-raised"></span></p>
+        </div>
+
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            cUSD         
+           </dt>
+
+          <p >Funds raised: <br> <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl w-44  " id="funds-raised-cusd"></span></p>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
 
 
 
-   
+<section class="text-gray-600 body-font text-center">
+  <div class="container px-5 py-24  flex flex-wrap">
+    <div class="flex flex-wrap mx-auto ">
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-8 h-8" viewBox="0 0 24 24">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Donate in Celo</h2>
+            <p>
+              <input class="border-2" id="fund-project-amount-celo" type="number" >
+              <button class="mx-auto rounded bg-emerald-600 p-2 text-white m-2" id="fund-project-button-celo">Fund Project</button>
+            </p>
+           </div>
+        </div>
+      </div>
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Donate in cUSD</h2>
+            <p>
+              <button class="mx-auto rounded bg-emerald-600 p-2 text-white m-2" id="fund-project-button">Fund Project</button>
+              <input class="border-2" id="fund-project-amount" type="number" >
+            </p>
+               
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="text-center text-xl m-8">
+  <p class="">To close this fundrasing, turn the state to inactive</p>
+  <select id="change-project-state-select">
+    <option value="0">Active</option>
+    <option value="1">Inactive</option>
+  </select>
+  <button class="font-semibold m-2 bg-emerald-600 p-2 text-white rounded" id="change-project-state-button">Change Project State</button>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    
         <h1>Crowdfunding</h1>
         <p>Fundraising goal: <span id="fundraising-goal"></span></p>
         <p>Funds raised: <span id="funds-raised"></span></p>
         <p>
           <button id="fund-project-button">Fund Project</button>
           <input id="fund-project-amount" type="number" >
-        </p>
-        <p>
+        </p> -->
+        <!-- <p>
           <button id="change-project-state-button">Change Project State</button>
           <select id="change-project-state-select">
             <option value="0">Active</option>
             <option value="1">Inactive</option>
           </select>
-        </p>
-        <script src="index.js"></script>
+        </p> -->
       </body>
     </html>
     <!-- Script to interact with the contract -->
