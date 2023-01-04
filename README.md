@@ -1,3 +1,15 @@
+# Description 
+
+Make a wish is a crowdfunding Dapp, the theme is to help raising funds for children, you can enter and Donate the amount that you want wether in cUSD or in CELO, You have both functions to make transactions in cUSD and in CELO and you can see the fundraising goal and the amount that is being collected displayed, the numbers are brought from the contract. If you want to close the fundraising you have a function to set the project to inactive wich will no longer allow you to make transactions and this function is only for the contract owner.
+
+# Live Demo
+
+https://fedesuarez16.github.io/CELO-Make-a-wish/
+
+
+
+
+
 # Install
 
 ```
