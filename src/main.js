@@ -7,11 +7,12 @@
   const ERC20_DECIMALS = 18
   const MPContractAddress = "0x8aE12cd1E825ce5029883EFc76Ede4Ae348a05bf"
   const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
+  const contractOwner = "0xA347A6DBCaBbe179dd5EFcF9b6A9606f65a1A511"
+
 
   let kit
   let contract
-  let approve
-  let cUSDContract
+ 
 
 
 
@@ -94,11 +95,15 @@ const getBalance = async function () {
 
       await getFundsState()
          notification("you transfered succesfully")
+
+         await getBalance()
+
  });
 
 
 document.querySelector("#fund-project-button").addEventListener('click', async () => {
 
+  const newState = document.querySelector("#change-project-state-select").value;
   const cUSDContract = new kit.web3.eth.Contract(erc20Abi, cUSDContractAddress)
 
   // Convert the string value to a BigNumber object
@@ -117,14 +122,22 @@ document.querySelector("#fund-project-button").addEventListener('click', async (
         notification("⌛ The amount must be greater than 0...");
         return;
      }
+     if( newState == 1) {
+
+     notification("The fundraising is inactive, you cannot fund")
+     return;
+   }
 
      
   // await contract.methods.fundProject(amount).send({ from: kit.defaultAccount, value: amount });
 
      await cUSDContract.methods.transfer(MPContractAddress, amount).send({ from: kit.defaultAccount })
 
-     await getFundsState()
+     await cUSDBalance()
         notification("you transfered succesfully")
+
+        await getBalance()
+
 });
 
 
@@ -159,27 +172,30 @@ const cUSDBalance = async function () {
   document.querySelector("#funds-raised-cusd").textContent = cUSDBalance
 }
 
-
-
 document.querySelector("#change-project-state-button").addEventListener('click', async () => {
   // Get the value selected by the user from the dropdown menu
   const newState = document.querySelector("#change-project-state-select").value;
 
-  // Check that the user is authenticated
-  if (!kit.defaultAccount) {
-    notification("you must be authenticated to change the fundraising state")
+  // Check that the user is the owner
+  if (kit.defaultAccount !== contractOwner) {
+    notification("you must be the owner to change the fundraising state");
+    return;
   }
 
   // Check that the new state is valid
   if (newState !== '0' && newState !== '1') {
-    notification("invalid state")
+      notification("invalid state")
   }
 
   // Call the contract's changeProjectState function
   await contract.methods.changeProjectState(newState).send({ from: kit.defaultAccount });
 
   notification("you changed the fundraising state")
+
+
+  // Update the project state in the UI
 });
+
 
 
 
