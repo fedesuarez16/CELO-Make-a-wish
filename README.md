@@ -1,3 +1,13 @@
+# Description 
+
+Make a wish is a crowdfunding Dapp, the theme is to help raising funds for children, you can enter and Donate the amount that you want wether in cUSD or in CELO, you can see the fundraising goal and the amount that is being collected displayed and  it also has a function to close the fundraising if you are the owner 
+
+# Live Demo
+
+
+
+
+
 # Install
 
 ```
