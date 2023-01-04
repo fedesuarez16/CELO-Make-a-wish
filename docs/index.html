@@ -1,222 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load the Web3 library -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 
-    <!-- CSS -->
+
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
-    />
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+    crossorigin="anonymous"
+  />
 
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-	<link
-	  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
-	  rel="stylesheet"
-	/>
-
+    <!-- Load the contract ABI -->
+    <!-- <script src="./abi.json"></script> -->
 
     <style>
-        :root {
-          --bs-font-sans-serif: "DM Sans", sans-serif;
+      :root {
+        --bs-font-sans-serif: "DM Sans", sans-serif;
+      }
+
+      @media (min-width: 576px) {
+        .card {
+          border: 0;
+          box-shadow: rgb(0 0 0 / 5%) 0px 10px 20px;
+          border-radius: 10px;
         }
-  
-        @media (min-width: 576px) {
-          .card {
-            border: 0;
-            box-shadow: rgb(0 0 0 / 5%) 0px 10px 20px;
-            border-radius: 10px;
-          }
-  
-          .card-img-top {
-            width: 100%;
-            height: 20vw;
-            object-fit: cover;
-          }
+
+        .card-img-top {
+          width: 100%;
+          height: 20vw;
+          object-fit: cover;
         }
-      </style>
+      }
+    </style>
+
+  </head>
+  <body>
+
+
+<header>
+
+
+  <div class="  position-fixed w-full" >
+
+    <nav class="navbar bg-white navbar-light">
+      <div class="container-fluid">
+        <span class="nav-link border rounded-pill bg-light">
+          <span id="balance">0</span>
+          cUSD
+        </span>
+      </div>
+    </nav>
+    <div class="alert alert-warning sticky-top mt-2" role="alert">
+      <span id="notification">⌛ Loading...</span>
+    </div>
+    <main id="marketplace" class="row"></main>
+  </div>
+
+    <section
+    class="overflow-hidden bg-gray-50 sm:grid sm:grid-cols-2 sm:items-center"
+  >
+    <div class="p-8 md:p-12 lg:px-16 lg:py-24">
+      <div class="mx-auto max-w-xl text-center sm:text-left">
+        <h2 class="text-2xl font-bold text-gray-900 md:text-3xl">
+        Make a wish
+        </h2>
   
-      <title>Street Food Kigali</title>
-      </head>
-
-      <body>
-        <div class="container mt-2" style="max-width: 72em">
-    
-          <nav class="navbar bg-white navbar-light">
-            <div class="container-fluid">
-              <span class="navbar-brand m-0 h4 fw-bold">Street Food Kigali</span>
-              <span class="nav-link border rounded-pill bg-light">
-                <span id="balance">0</span>
-                cUSD
-              </span>
-            </div>
-          </nav>
-
-
-          <div class="alert alert-warning sticky-top mt-2" role="alert">
-            <span id="notification">⌛ Loading...</span>
-          </div>
+        <p class="hidden text-gray-500 md:mt-4 md:block">
+          We are a crowdfunding campaign to raise money for organizations that provide shelter, food, education, and other essential services to children without a home. Every dollar that we raise will go directly to supporting these children and giving them the chance to thrive.
+        </p>
 
 
 
-          <div class="mb-4" style="margin-top: 4em">
-            <a
-              class="btn btn-dark rounded-pill"
-              data-bs-toggle="modal"
-              data-bs-target="#addModal"
-            >
-              Fund
-            </a>
 
-            <nav class="r bg-white navbar-light">
-              <div class="container-fluid">
-                <span class="nav-link border rounded-pill bg-light">
-                  <span id="goal">0</span>
-                  cUSD
-                </span>
-              </div>
-            </nav>
-
-
-
-          </div>
-
-
-             
-        
-
-          <main id="marketplace" class="row"></main>
+        <div class="mt-4 md:mt-8">
+          <a
+            href="#"
+            class="inline-block rounded bg-emerald-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus:outline-none focus:ring focus:ring-yellow-400"
+          >
+            Donate Now
+          </a>
         </div>
+      </div>
+    </div>
+  
+    <img
+      alt="Violin"
+       src='https://i.postimg.cc/3RhL8xm3/pexels-julia-volk-7293100.jpg' alt='jpeg-optimizer-pexels-dazzle-jam-1190208'
+      class="h-full w-full object-cover sm:h-[calc(100%_-_2rem)] sm:self-end sm:rounded-tl-[30px] md:h-[calc(100%_-_4rem)] md:rounded-tl-[60px]"
+    />
+  </section>
+  
+</header>
 
-     
+<section class="bg-white">
+  <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+        Join the global movement to give every child a chance to thrive
 
-      
-     
 
 
-        <!--Modal-->
-<div
-class="modal fade"
-id="addModal"
-tabindex="-1"
-aria-labelledby="newProductModalLabel"
-aria-hidden="true"
->
-<div class="modal-dialog">
-  <div class="modal-content">
+      </h2>
 
-    <div class="modal-header">
-      <h5 class="modal-title" id="newProductModalLabel">New Product</h5>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
+      <p class="mt-4 text-gray-500 sm:text-xl">
+        "Empowering the next generation, one child at a time"
+
+
+      </p>
     </div>
 
-<!-- donation  -->
-  
-<div class="modal-body">
-        <form>
-          <div class="form-row">
-            <div class="col">
-              <input
-                type="number"
-                id="NewDonation"
-                class="form-control mb-2"
-                placeholder="Enter the amount you want to donate"
-              />
-            <!-- </div>
-            <div class="col">
-              <input
-                type="text"
-                id="newImgUrl"
-                class="form-control mb-2"
-                placeholder="Enter image url"
-              />
-            </div>
-            <div class="col">
-              <input
-                type="text"
-                id="newProductDescription"
-                class="form-control mb-2"
-                placeholder="Enter product description"
-              />
-            </div>
-            <div class="col">
-              <input
-                type="text"
-                id="newLocation"
-                class="form-control mb-2"
-                placeholder="Enter location"
-              />
-            </div>
-            <div class="col">
-              <input
-                type="text"
-                id="newPrice"
-                class="form-control mb-2"
-                placeholder="Enter price"
-              />
-            </div>
+    <div class="mt-8 sm:mt-12">
+      <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            Fundraising goal
+            </dt>
+
+          <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl" id="fundraising-goal"></span></p>
+
+
+        </div>
+
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4  py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            CELO
+          </dt>
+
+          <p >Funds raised: <br> <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl w-44  " id="funds-raised"></span></p>
+        </div>
+
+        <div
+          class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center"
+        >
+          <dt class="order-last text-lg font-medium text-gray-500">
+            cUSD         
+           </dt>
+
+          <p >Funds raised: <br> <span class="text-4xl font-extrabold text-emerald-600 md:text-5xl w-44  " id="funds-raised-cusd"></span></p>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="text-gray-600 body-font text-center">
+  <div class="container px-5 py-24  flex flex-wrap">
+    <div class="flex flex-wrap mx-auto ">
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full bg-white text-emerald-500 flex-shrink-0">
+            <img src="https://i.postimg.cc/PrH6s4Y0/color-logo.png" class="">
           </div>
-        </form>
-      </div> -->
-
-
-
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-light border"
-          data-bs-dismiss="modal"
-        >
-          Close
-        </button>
-        <button
-          type="button"
-          class="btn btn-dark"
-          data-bs-dismiss="modal"
-          id="newDonationBtn"
-        >
-          Donate
-        </button>
+          <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Donate in Celo</h2>
+            <p>
+              <input class="border-2" id="fund-project-amount-celo" type="number" >
+              <button class="mx-auto rounded bg-emerald-600 p-2 text-white m-2" id="fund-project-button-celo">Fund Project</button>
+            </p>
+           </div>
+        </div>
+      </div>
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full  text-emerald-500 flex-shrink-0">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto max-h-full relative">
+              <path d="M47 88.5714C61 88.5714 72.8571 79.5714 77.2857 67.1429H68.5714C64.7143 75.1429 56.4286 80.5714 47 80.5714C33.7143 80.5714 22.8571 69.7143 22.8571 56.4286C22.8571 47 28.2857 38.7143 36.2857 34.8571V26.1429C23.8571 30.5714 14.8571 42.4286 14.8571 56.4286C14.8571 74.1429 29.2857 88.5714 47 88.5714ZM65.4286 49.2857V37.5714C69.4286 38.5714 72.5714 39.8571 72.5714 43.2857C72.5714 46.4286 69.8571 48.7143 65.4286 49.2857ZM60 60.1429H65.7143V55.7143C74.1429 54.7143 79.5714 49.8571 79.5714 43.2857C79.5714 34.1429 72.2857 32.1429 65.4286 30.8571V18.7143C68.7143 19 72.2857 20 75.5714 21.5714V14.4286C72.4286 13.2857 69 12.5714 65.7143 12.4286V8.14285H60V12.4286C51.2857 13.4286 46.2857 18.2857 46.2857 24.4286C46.2857 33.7143 53.4286 35.8571 60.2857 37.1429V49.2857C56.1429 48.7143 51.7143 47 46.5714 44.2857V51.8571C51 54 55.5714 55.4286 60 55.7143V60.1429ZM60.2857 30.2857C56.2857 29.4286 53.2857 28 53.2857 24.4286C53.2857 21.1429 55.8571 19.1429 60.2857 18.7143V30.2857Z"
+               fill="currentColor"></path>
+              </svg>               </div>
+          <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Donate in cUSD</h2>
+            <p>
+              <button class="mx-auto rounded bg-emerald-600 p-2 text-white m-2" id="fund-project-button">Fund Project</button>
+              <input class="border-2" id="fund-project-amount" type="number" >
+            </p>
+               
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!--/Modal-->
+</section>
+
+<section class="text-center text-xl m-8">
+  <p class="">To close this fundrasing, turn the state to inactive</p>
+  <select id="change-project-state-select">
+    <option value="0">Active</option>
+    <option value="1">Inactive</option>
+  </select>
+  <button class="font-semibold m-2 bg-emerald-600 p-2 text-white rounded" id="change-project-state-button">Change Project State</button>
+  </section>
 
 
 
-<!-- <div class="navbar bg-white navbar-light">
-  <div class="container-fluid">
-    <span class="navbar-brand m-0 h4 fw-bold">Street Food Kigali</span>
-    <span class="nav-link border rounded-pill bg-light">
-      <span id="balance">0</span>
-      cUSD
-    </span>
-  </div>
-</div> -->
 
 
 
-<script
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-crossorigin="anonymous"
-></script>
-<script src="https://unpkg.com/ethereum-blockies@0.1.1/blockies.min.js"></script>
-<script type="text/javascript" src="main.js"></script></body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    
+        <h1>Crowdfunding</h1>
+        <p>Fundraising goal: <span id="fundraising-goal"></span></p>
+        <p>Funds raised: <span id="funds-raised"></span></p>
+        <p>
+          <button id="fund-project-button">Fund Project</button>
+          <input id="fund-project-amount" type="number" >
+        </p> -->
+        <!-- <p>
+          <button id="change-project-state-button">Change Project State</button>
+          <select id="change-project-state-select">
+            <option value="0">Active</option>
+            <option value="1">Inactive</option>
+          </select>
+        </p> -->
+      <script type="text/javascript" src="main.js"></script></body>
+    </html>
+    <!-- Script to interact with the contract -->
+ 
+    <script src="https://unpkg.com/ethereum-blockies@0.1.1/blockies.min.js"></script>
