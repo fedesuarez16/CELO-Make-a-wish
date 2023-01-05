@@ -68,6 +68,9 @@ const getBalance = async function () {
 }
 
 
+// Fund CELO function 
+
+
  document.querySelector("#fund-project-button-celo").addEventListener('click', async () => {
 
    const cUSDContract = new kit.web3.eth.Contract(erc20Abi, cUSDContractAddress)
@@ -82,14 +85,14 @@ const getBalance = async function () {
       return;
       }
  
-      //  Check that the params is greater than 0
+      //  Check that the amount is greater than 0
       if (amount <= 0) {
 
          notification("⌛ The amount must be greater than 0...");
          return;
       }
 
-     
+      //transfer the amoutn
        await contract.methods.fundProject(amount).send({ from: kit.defaultAccount, value: amount });
 
 
@@ -99,6 +102,8 @@ const getBalance = async function () {
          await getBalance()
 
  });
+
+//Transfer cUSD function 
 
 
 document.querySelector("#fund-project-button").addEventListener('click', async () => {
@@ -129,8 +134,8 @@ document.querySelector("#fund-project-button").addEventListener('click', async (
    }
 
      
-  // await contract.methods.fundProject(amount).send({ from: kit.defaultAccount, value: amount });
-
+      //transfer amount in cUSD
+      
      await cUSDContract.methods.transfer(MPContractAddress, amount).send({ from: kit.defaultAccount })
 
      await cUSDBalance()
