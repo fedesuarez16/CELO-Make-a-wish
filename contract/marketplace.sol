@@ -3,114 +3,135 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-// This contract allows for the creation of a crowdfunding project.
-// The project has an id, a name, a description, an author, a state, funds raised, and a fundraising goal.
+interface IERC20Token {
+    function transfer(address, uint256) external returns (bool);
+
+    function approve(address, uint256) external returns (bool);
+
+    function transferFrom(address, address, uint256) external returns (bool);
+
+    function balanceOf(address) external view returns (uint256);
+}
+
+/// @title This contract allows for the creation of a crowdfunding project.
+/// @notice The project has an id, a name, a description, an author, a state, funds raised, and a fundraising goal.
 contract CrowdFunding {
-    // Enum for the different states a project can be in: active or inactive
+    /// @notice Enum for the different states a project can be in: active or inactive
+    /// @param active Project is still active
+    /// @param inactive Project is no longer active
     enum FundRaisingState {active, inactive}
 
-    // Struct to represent a project
+    /// @notice Struct to represent a project
     struct Project {
         string id; // ID of the project
         string name; // Name of the project
         string description; // Description of the project
         address payable author; // Address of the author of the project
         FundRaisingState state; // Current state of the project
-        uint256 funds; // Amount of funds raised so far
+        uint256 cusdFunds; // Amount of funds raised in cUSD
+        uint256 celoFunds; // Amount of funds raised in Celo
         uint256 fundraisingGoal; // Fundraising goal for the project
     }
 
-    // Public variable to store the project
-    Project public project;
+    /// @notice Public variable to store projects
+    mapping(string => Project) public projects;
 
-    // Event triggered when a project is funded
+    address cusdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
+
+    /// @notice Event triggered when a project is funded
+    /// @param projectId ID of project to be funded
+    /// @param value Amount to fund project with
     event ProjectFunded(string projectId, uint256 value);
 
-    // Event triggered when a project's state is changed
+    /// @notice Event triggered when a project's state is changed
+    /// @param id Project Id
+    /// @param FundRaisingState Project state
     event ProjectStateChanged(string id, uint256 FundRaisingState);
 
-    // Constructor function to create a new project
-    // It takes in the following parameters:
-    // - _id: ID of the project
-    // - _name: Name of the project
-    // - _description: Description of the project
-    // - _fundraisingGoal: Fundraising goal for the project
-    constructor(
-        string memory _id,
-        string memory _name,
-        string memory _description,
+    /// @notice Constructor function to create a new project    
+    /// @param _id ID of the project
+    /// @param _name Name of the project
+    /// @param _description Description of the project
+    /// @param _fundraisingGoal Fundraising goal for the project
+    function createProject (
+        string calldata _id,
+        string calldata _name,
+        string calldata _description,
         uint256 _fundraisingGoal
-    ) {
+    ) public {
+          require(projects[_id].author == address(0), "Project ID already taken");
           // Initialize the project with the given parameters
-          project = Project(
+          projects[_id] = Project(
             _id,
             _name,
             _description,
             payable(msg.sender), // Set the project author to the caller of the constructor function
             FundRaisingState.active, // Set the initial state of the project to active
             0, // Initialize the funds raised to 0
+            0,
             _fundraisingGoal // Set the fundraising goal to the given value
         );
     }
 
-    // Modifier to check if the caller of the function is the author of the project
-    modifier isAuthor() {
+    /// @notice Modifier to check if the caller of the function is the author of the project
+    modifier isAuthor(string calldata _id) {
         // If the caller is not the author of the project, throw an error
         require(
-            project.author == msg.sender,
+            projects[_id].author == msg.sender,
             "You need to be the project author"
         );
         // If the caller is the author, continue execution of the function
         _;
     }
 
-    // Modifier to check if the caller of the function is not the author of the project
-    modifier isNotAuthor() {
-        // If the caller is the author of the project, throw an error
-        require(
-            project.author != msg.sender,
-            "As author you can not fund your own project"
-        );
-        // If the caller is not the author, continue execution of the function
-        _;
-    }
-
-      // Function to fund a project
-    // It takes in the following parameter:
-    // - value: Amount to fund the project with
-    function fundProject(uint value) public payable {
+    /// @notice Function to fund a project    
+    /// @param value Amount (in cUSD) to fund the project with
+    /// @param id Project Id
+    function fundProject(uint value, string calldata id) public payable {
         // If the project is inactive, throw an error
-        require(project.state != FundRaisingState.inactive, "The project can not receive funds");
-        // If the value to fund the project with is 0 or less, throw an error
-        require(value > 0, "Fund value must be greater than 0");
-        // Transfer the funds to the project author
-        project.author.transfer(value);
+        require(projects[id].state != FundRaisingState.inactive, "The project can not receive funds");        
         // Add the funded value to the project's funds
-        project.funds += value;
+        projects[id].cusdFunds += value;
+        projects[id].celoFunds += msg.value;      
+
+        // transfer cUSD
+        require(
+        IERC20Token(cusdTokenAddress).transferFrom(
+            msg.sender,
+            projects[id].author,
+            value
+        ),
+        "Transfer failed."
+        );
+
+        // Transfer the celo to the project author
+        // Note: Update state change before making external call
+        projects[id].author.transfer(msg.value);
         // Emit an event to indicate that the project has been funded
-        emit ProjectFunded(project.id, value);
+        emit ProjectFunded(id, value);
     }
 
-    // Function to change the state of a project
-    // It takes in the following parameter:
-    // - newState: The new state to set the project to (active or inactive)
-    function changeProjectState(FundRaisingState newState) public isAuthor {
+    /// @notice Function to change the state of a project    
+    /// @param newState The new state to set the project to (active or inactive)
+    function changeProjectState(FundRaisingState newState, string calldata id) public isAuthor(id) {
         // If the new state is the same as the current state, throw an error
-        require(project.state != newState, "New state must be different");
+        require(projects[id].state != newState, "New state must be different");
         // Set the project's state to the new state
-        project.state = newState;
+        projects[id].state = newState;
 
     }
 
-    // View function to get the fundraising goal of a project
-    function getFundRaisingGoal () public view returns (uint) {
+    /// @notice Function to get the fundraising goal of a project
+    /// @param id Project Id
+    function getFundRaisingGoal (string calldata id) public view returns (uint) {
         // Return the fundraising goal of the project
-        return project.fundraisingGoal;
+        return projects[id].fundraisingGoal;
     }
 
-    // View function to get the current amount of funds raised for a project
-    function getFundsState () public view returns (uint) {
+    /// @notice Function to get the current amount of funds raised for a project
+    /// @param id Project id
+    function getFundsState (string calldata id) public view returns (uint, uint) {
         // Return the current amount of funds raised for the project
-        return project.funds;
+        return (projects[id].celoFunds, projects[id].cusdFunds);
     }
 }
