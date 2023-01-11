@@ -13,9 +13,6 @@
   let kit
   let contract
  
-
-
-
   const connectCeloWallet = async function () {
     if (window.celo) {
       notification("⚠️ Please approve this DApp to use it.")
