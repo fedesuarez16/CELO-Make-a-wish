@@ -6,7 +6,7 @@ let webpackConfig = require("./webpack.config");
 let webpackDevServerOptions = {
   publicPath: "/",
   contentBase: path.join(process.cwd(), "dist"),
-  historyApiFallback: true,
+  historyApiFallback: true,                     
   hot: true,
   host: "0.0.0.0"
 };

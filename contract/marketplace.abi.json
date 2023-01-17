@@ -80,11 +80,24 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "value",
 				"type": "uint256"
 			}
 		],
 		"name": "fundProject",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "fundProjectCUSD",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
